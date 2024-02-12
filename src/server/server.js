@@ -4,6 +4,7 @@ const app = express()
 //import routes
 const home = require("./routes/home")
 const users = require("./routes/users")
+const login = require("./routes/login")
 
 // middlewares
 app.use(express.json())
@@ -11,6 +12,7 @@ app.use(express.json())
 //routes
 app.use("/", home)
 app.use("/users", users)
+app.use("/login", login)
 
 // init server
 const port = process.env.PORT || 3333

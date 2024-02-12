@@ -1,6 +1,6 @@
-const express = require("express")
+const { Router } = require("express")
 
-const router = express.Router()
+const router = Router()
 
 router.get("/", (request, response) => {
     response.status(200).json({ message: "Ok" })
