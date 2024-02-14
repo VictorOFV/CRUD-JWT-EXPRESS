@@ -1,16 +1,13 @@
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const User = require("../database/models/User.model")
+const loginValidation = require("../validations/loginValidation")
 
 class LoginControler {
 
     static async store(request, response) {
-        const { email, password } = request.body
-
-        if (!email) return response.status(400).json({ messsage: "Email não informado." })
-        if (!password) return response.status(400).json({ message: "Senha não informada." })
-
         try {
+            const { email, password } = loginValidation.parse(request.body)
             const user = await User.findOne({ email })
 
             if (!user) return response.status(401).json({ message: "Email ou senha incorreta." })
@@ -25,8 +22,7 @@ class LoginControler {
 
             response.status(200).json({ user: userWithoutPassword, token })
         } catch (error) {
-            console.log(`[ SERVER ] - Erro interno no servidor.`.red, error)
-            response.status(500).json({ message: "Erro interno no servidor." })
+            next(error)
         }
     }
 }

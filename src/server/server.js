@@ -6,6 +6,10 @@ const home = require("./routes/home")
 const users = require("./routes/users")
 const login = require("./routes/login")
 
+//import middlewares
+const zodValidationErrorHandler = require("./middlewares/zodValidationErrorHandler");
+const errorHandler = require("./middlewares/errorHandler")
+
 // middlewares
 app.use(express.json())
 
@@ -13,6 +17,9 @@ app.use(express.json())
 app.use("/", home)
 app.use("/users", users)
 app.use("/login", login)
+
+app.use(zodValidationErrorHandler)
+app.use(errorHandler)
 
 // init server
 const port = process.env.PORT || 3333
