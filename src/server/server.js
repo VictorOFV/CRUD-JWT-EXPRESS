@@ -1,3 +1,4 @@
+require("express-async-errors")
 const express = require("express")
 const app = express()
 
@@ -18,6 +19,7 @@ app.use("/", home)
 app.use("/users", users)
 app.use("/login", login)
 
+// error middlewares
 app.use(zodValidationErrorHandler)
 app.use(errorHandler)
 
