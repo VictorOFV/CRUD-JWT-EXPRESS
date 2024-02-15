@@ -10,6 +10,7 @@ const login = require("./routes/login")
 //import middlewares
 const zodValidationErrorHandler = require("./middlewares/zodValidationErrorHandler");
 const errorHandler = require("./middlewares/errorHandler")
+const apiErrorHandle = require("./middlewares/ApiErrorHandle")
 
 // middlewares
 app.use(express.json())
@@ -21,6 +22,7 @@ app.use("/login", login)
 
 // error middlewares
 app.use(zodValidationErrorHandler)
+app.use(apiErrorHandle)
 app.use(errorHandler)
 
 // init server
