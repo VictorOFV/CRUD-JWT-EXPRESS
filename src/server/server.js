@@ -6,6 +6,7 @@ const app = express()
 const home = require("./routes/home")
 const users = require("./routes/users")
 const login = require("./routes/login")
+const checklist = require("./routes/checklist")
 
 //import middlewares
 const zodValidationErrorHandler = require("./middlewares/zodValidationErrorHandler");
@@ -19,6 +20,7 @@ app.use(express.json())
 app.use("/", home)
 app.use("/users", users)
 app.use("/login", login)
+app.use("/checklist", checklist)
 
 // error middlewares
 app.use(zodValidationErrorHandler)

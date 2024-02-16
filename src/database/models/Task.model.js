@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 const taskSchema = new Schema({
     name: { type: String, required: true },
     description: { type: String, required: true },
-    checklist: { type: Schema.Types.ObjectId, ref: "Checklist" }
+    checklist: { type: Schema.Types.ObjectId, ref: "Checklist", required: true }
 });
 
 const Task = mongoose.model("Task", taskSchema);
