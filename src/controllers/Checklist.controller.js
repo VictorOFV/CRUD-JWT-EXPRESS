@@ -7,13 +7,13 @@ const idValidation = require("../validations/idValidation");
 class ChecklistController {
 
     static async index(request, response) {
-        const checklists = await Checklist.find({})
+        const checklists = await Checklist.find({}).populate(["tasks", "author"])
         response.status(200).json({ checklists })
     }
 
     static async show(request, response) {
         const { id } = idValidation.parse(request.params)
-        const checklist = await Checklist.findById(id)
+        const checklist = await Checklist.findById(id).populate(["tasks", "author"])
 
         if (!checklist) throw new NotFoundApiError("Checklist não encontrado.")
         response.status(200).json({ checklist })

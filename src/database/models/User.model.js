@@ -7,6 +7,13 @@ const userSchema = new Schema({
     password: { type: String, required: true }
 })
 
+userSchema.set('toJSON', {
+    transform: function (doc, ret, options) {
+        delete ret.password; // Remove o campo password ao serializar para JSON
+        return ret;
+    }
+});
+
 const User = mongoose.model("User", userSchema)
 
 module.exports = User
