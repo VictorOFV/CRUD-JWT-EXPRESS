@@ -1,9 +1,10 @@
 require("express-async-errors")
 const express = require("express")
+const cors = require("cors")
 const app = express()
 
 //import routes
-const home = require("./routes/home")
+const verifyToken = require("./routes/verifyToken")
 const users = require("./routes/users")
 const login = require("./routes/login")
 const checklist = require("./routes/checklist")
@@ -15,10 +16,11 @@ const errorHandler = require("./middlewares/errorHandler")
 const apiErrorHandle = require("./middlewares/ApiErrorHandle")
 
 // middlewares
+app.use(cors({origin: process.env.ORIGIN}))
 app.use(express.json())
 
 //routes
-app.use("/", home)
+app.use("/verify-token", verifyToken)
 app.use("/users", users)
 app.use("/login", login)
 app.use("/checklist", checklist)

@@ -8,13 +8,13 @@ const { NotFoundApiError, BadRequestApiError } = require("../utils/ApiErrors")
 class UserControler {
 
     static async index(request, response, next) {
-        const users = await User.find({}, "-password")
+        const users = await User.find({})
         response.status(200).json({ users })
     }
 
     static async show(request, response, next) {
         const { id } = idValidation.parse(request.params)
-        const user = await User.findById(id, "-password")
+        const user = await User.findById(id)
 
         if (!user) throw new NotFoundApiError("Usuário não encontrado.")
 

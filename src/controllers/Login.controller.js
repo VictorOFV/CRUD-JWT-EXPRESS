@@ -16,11 +16,8 @@ class LoginControler {
 
         if (!compare) throw new UnauthorizedApiError("Email ou senha incorreta.")
 
-        const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY_JWT, { expiresIn: "5m" })
-        const userWithoutPassword = user.toObject();
-        delete userWithoutPassword.password;
-
-        response.status(200).json({ user: userWithoutPassword, token })
+        const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY_JWT, { expiresIn: "1h" })
+        response.status(200).json({ user, token })
     }
 }
 
