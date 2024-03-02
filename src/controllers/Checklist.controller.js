@@ -7,7 +7,7 @@ const idValidation = require("../validations/idValidation");
 class ChecklistController {
 
     static async index(request, response) {
-        const checklists = await Checklist.find({}).populate(["tasks", "author"])
+        const checklists = await Checklist.find({}).populate(["author"])
         response.status(200).json({ checklists })
     }
 
