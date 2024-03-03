@@ -19,8 +19,8 @@ async function authJwt(request, response, next) {
 
         next()
     } catch (error) {
-        if (error.name === 'TokenExpiredError' || error.name === "JsonWebTokenError") {
-            return response.status(401).json({ message: 'Não autorizado' });
+        if (error.name === "TokenExpiredError" || error.name === "JsonWebTokenError") {
+            return response.status(401).json({ message: "Não autorizado" });
         }
 
         console.log(`[ SERVER ] - Erro interno no servidor.`.red, error)

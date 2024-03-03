@@ -22,31 +22,36 @@ class UserControler {
     }
 
     static async store(request, response, next) {
-        const { name, email, password } = userCreateValidation.parse(request.body)
+        const { name, email, password, username } = userCreateValidation.parse(request.body)
 
         const emailExist = await User.exists({ email })
+        const usernameExist = await User.exists({ username })
 
         if (emailExist) throw new BadRequestApiError("Por favor utilize um email diferente!")
+        if (usernameExist) throw new BadRequestApiError("Por favor utilize um username diferente!")
 
         const bcryptSalt = await bcrypt.genSalt(10)
         const passwordHash = await bcrypt.hash(password, bcryptSalt)
-        const user = new User({ email, name, password: passwordHash })
+        const user = new User({ email, name, password: passwordHash, username })
 
         await user.save()
-        response.status(201).json({ message: "Usuário cadastrado com sucesso!" })
+        response.status(201).json(user)
     }
 
     static async update(request, response, next) {
         const { id } = idValidation.parse(request.params)
-        const { name, email } = userUpdateValidation.parse(request.body)
-        const emailExist = await User.exists({ email, _id: { $ne: id } })
+        const userInfo = userUpdateValidation.parse(request.body)
+
+        const emailExist = await User.exists({ email: userInfo.email, _id: { $ne: id } })
+        const usernameExist = await User.exists({ username: userInfo.username, _id: { $ne: id } })
 
         if (emailExist) throw new BadRequestApiError("Por favor utilize um email diferente!")
+        if (usernameExist) throw new BadRequestApiError("Por favor utilize um username diferente!")
 
-        const user = await User.findByIdAndUpdate(id, { name, email })
+        const user = await User.findByIdAndUpdate(id, userInfo, { new: true })
 
         if (!user) throw new NotFoundApiError("Usuário não encontrado.")
-        response.status(200).json({ message: "Usuário atualizado com sucesso." })
+        response.status(200).json(user)
     }
 
     static async delete(request, response, next) {
