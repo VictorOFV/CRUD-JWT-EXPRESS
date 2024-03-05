@@ -67,7 +67,7 @@ class UserControler {
         const { id } = idValidation.parse(request.params)
         const { filename } = imageValidation.parse(request.file)
 
-        const pathImageEstatic = `/uploads/avatar/${filename}`
+        const pathImageEstatic = `/public/avatar/${filename}`
         const user = await User.findByIdAndUpdate(id, { avatar: pathImageEstatic }, { new: true })
 
         if (!user) throw new NotFoundApiError("Usuário não encontrado.")
@@ -79,7 +79,7 @@ class UserControler {
         const { id } = idValidation.parse(request.params)
         const { filename } = imageValidation.parse(request.file)
 
-        const pathImageEstatic = `/uploads/banner/${filename}`
+        const pathImageEstatic = `/public/banner/${filename}`
         const user = await User.findByIdAndUpdate(id, { banner: pathImageEstatic }, { new: true })
 
         if (!user) throw new NotFoundApiError("Usuário não encontrado.")

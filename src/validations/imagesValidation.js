@@ -6,6 +6,7 @@ const allowExtension = ['.jpeg', '.jpg', '.png', '.gif'];
 const imageValidation = z.object({
     filename: z.string(),
     originalname: z.string(),
+    path: z.string(),
     mimetype: z.string().refine(mimetype => mimetype.startsWith('image/'), {
         message: 'O arquivo deve ser uma imagem.'
     }),

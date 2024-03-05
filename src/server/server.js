@@ -17,7 +17,7 @@ const apiErrorHandle = require("./middlewares/ApiErrorHandle")
 
 // middlewares
 app.use(cors({ origin: process.env.ORIGIN }))
-app.use("/uploads", express.static("public"))
+app.use("/public", express.static("public"))
 app.use(express.json())
 
 //routes

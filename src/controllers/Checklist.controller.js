@@ -1,6 +1,7 @@
 const Checklist = require("../database/models/Checklist.model");
 const Task = require("../database/models/Task.model");
 const { NotFoundApiError } = require("../utils/ApiErrors");
+const deleteFile = require("../utils/deleteFile");
 const checklistValidation = require("../validations/checklistValidation");
 const idValidation = require("../validations/idValidation");
 const imageValidation = require("../validations/imagesValidation");
@@ -25,9 +26,8 @@ class ChecklistController {
         const checklistData = { name, description, author }
 
         if (request.file) {
-            const { filename } = imageValidation.parse(request.file)
-            const pathIcon = `/uploads/checklist_icons/${filename}`
-            checklistData.icon = pathIcon
+            const { path } = imageValidation.parse(request.file)
+            checklistData.icon = path
         }
 
         const checklist = await new Checklist(checklistData).save()
@@ -40,9 +40,10 @@ class ChecklistController {
         const checklistData = { name, description }
 
         if (request.file) {
-            const { filename } = imageValidation.parse(request.file)
-            const pathIcon = `/uploads/checklist_icons/${filename}`
-            checklistData.icon = pathIcon
+            const { path } = imageValidation.parse(request.file)
+            checklistData.icon = path
+            const checklist = await Checklist.findById(id)
+            deleteFile(checklist.icon)
         }
 
         const checklist = await Checklist.findByIdAndUpdate(id, checklistData, { new: true })
