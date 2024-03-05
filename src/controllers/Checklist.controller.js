@@ -3,6 +3,7 @@ const Task = require("../database/models/Task.model");
 const { NotFoundApiError } = require("../utils/ApiErrors");
 const checklistValidation = require("../validations/checklistValidation");
 const idValidation = require("../validations/idValidation");
+const imageValidation = require("../validations/imagesValidation");
 
 class ChecklistController {
 
@@ -21,14 +22,30 @@ class ChecklistController {
 
     static async store(request, response) {
         const { name, description, author } = checklistValidation.parse(request.body)
-        const checklist = await new Checklist({ name, description, author }).save()
+        const checklistData = { name, description, author }
+
+        if (request.file) {
+            const { filename } = imageValidation.parse(request.file)
+            const pathIcon = `/uploads/checklist_icons/${filename}`
+            checklistData.icon = pathIcon
+        }
+
+        const checklist = await new Checklist(checklistData).save()
         response.status(201).json({ checklist })
     }
 
     static async update(request, response) {
         const { id } = idValidation.parse(request.params)
         const { name, description } = checklistValidation.parse(request.body)
-        const checklist = await Checklist.findByIdAndUpdate(id, { name, description }, { new: true })
+        const checklistData = { name, description }
+
+        if (request.file) {
+            const { filename } = imageValidation.parse(request.file)
+            const pathIcon = `/uploads/checklist_icons/${filename}`
+            checklistData.icon = pathIcon
+        }
+
+        const checklist = await Checklist.findByIdAndUpdate(id, checklistData, { new: true })
 
         if (!checklist) throw new NotFoundApiError("Checklist não encontrado.")
         response.status(200).json({ checklist })
@@ -39,7 +56,7 @@ class ChecklistController {
         const checklist = await Checklist.findByIdAndDelete(id)
 
         if (!checklist) throw new NotFoundApiError("Checklist não encontrado.")
-        
+
         await Task.deleteMany({ checklist: id })
         response.status(200).json({ checklist })
     }
