@@ -5,6 +5,7 @@ const userUpdateValidation = require("../validations/userUpdateValidation")
 const idValidation = require("../validations/idValidation")
 const { NotFoundApiError, BadRequestApiError } = require("../utils/ApiErrors")
 const imageValidation = require("../validations/imagesValidation")
+const deleteFile = require("../utils/deleteFile")
 
 class UserControler {
 
@@ -49,6 +50,22 @@ class UserControler {
         if (emailExist) throw new BadRequestApiError("Por favor utilize um email diferente!")
         if (usernameExist) throw new BadRequestApiError("Por favor utilize um username diferente!")
 
+        if (request.files) {
+            const files = request.files;
+
+            for (let file in files) {
+                await Promise.all(files[file].map(async fileInfo => {
+                    const { path } = imageValidation.parse(fileInfo);
+                    userInfo[file] = path;
+                    const user = await User.findById(id);
+
+                    if (user && user[file]) {
+                        await deleteFile(user[file]);
+                    }
+                }));
+            }
+        }
+
         const user = await User.findByIdAndUpdate(id, userInfo, { new: true })
 
         if (!user) throw new NotFoundApiError("Usuário não encontrado.")
@@ -61,30 +78,6 @@ class UserControler {
 
         if (!user) throw new NotFoundApiError("Usuário não encontrado.")
         response.status(200).json({ message: "Usuário deletado com sucesso!" })
-    }
-
-    static async uploadAvatar(request, response, next) {
-        const { id } = idValidation.parse(request.params)
-        const { filename } = imageValidation.parse(request.file)
-
-        const pathImageEstatic = `/public/avatar/${filename}`
-        const user = await User.findByIdAndUpdate(id, { avatar: pathImageEstatic }, { new: true })
-
-        if (!user) throw new NotFoundApiError("Usuário não encontrado.")
-
-        response.status(200).json({ user })
-    }
-
-    static async uploadBanner(request, response, next) {
-        const { id } = idValidation.parse(request.params)
-        const { filename } = imageValidation.parse(request.file)
-
-        const pathImageEstatic = `/public/banner/${filename}`
-        const user = await User.findByIdAndUpdate(id, { banner: pathImageEstatic }, { new: true })
-
-        if (!user) throw new NotFoundApiError("Usuário não encontrado.")
-
-        response.status(200).json({ user })
     }
 }
 

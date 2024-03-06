@@ -25,9 +25,15 @@ class ChecklistController {
         const { name, description, author } = checklistValidation.parse(request.body)
         const checklistData = { name, description, author }
 
-        if (request.file) {
-            const { path } = imageValidation.parse(request.file)
-            checklistData.icon = path
+        if (request.files) {
+            const files = request.files;
+
+            for (let file in files) {
+                files[file].map(fileInfo => {
+                    const { path } = imageValidation.parse(fileInfo)
+                    checklistData[file] = path
+                })
+            }
         }
 
         const checklist = await new Checklist(checklistData).save()
@@ -39,11 +45,20 @@ class ChecklistController {
         const { name, description } = checklistValidation.parse(request.body)
         const checklistData = { name, description }
 
-        if (request.file) {
-            const { path } = imageValidation.parse(request.file)
-            checklistData.icon = path
-            const checklist = await Checklist.findById(id)
-            deleteFile(checklist.icon)
+        if (request.files) {
+            const files = request.files
+
+            for (let file in files) {
+                await Promise.all(files[file].map(async fileInfo => {
+                    const { path } = imageValidation.parse(fileInfo)
+                    checklistData[file] = path;
+                    const checklist = await Checklist.findById(id)
+
+                    if (checklist && checklist[file]) {
+                        await deleteFile(checklist[file])
+                    }
+                }))
+            }
         }
 
         const checklist = await Checklist.findByIdAndUpdate(id, checklistData, { new: true })
