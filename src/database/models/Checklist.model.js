@@ -7,7 +7,8 @@ const checklistSchema = new Schema({
     tasks: [{ type: Schema.Types.ObjectId, ref: "Task" }],
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     createdAt: { type: Date, default: new Date() },
-    icon: { type: String, default: null }
+    icon: { type: String, default: null },
+    createdAt: { type: Date }
 });
 
 const Checklist = mongoose.model("Checklist", checklistSchema);

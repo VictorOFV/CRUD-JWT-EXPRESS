@@ -10,11 +10,12 @@ const userSchema = new Schema({
     gender: { type: String, default: null },
     bio: { type: String, default: null },
     avatar: { type: String, default: null },
-    banner: { type: String, default: null }
+    banner: { type: String, default: null },
+    createdAt: { type: Date }
 })
 
 userSchema.set('toJSON', {
-    transform: function (doc, ret, options) {
+    transform: (doc, ret, options) => {
         delete ret.password; // Remove o campo password ao serializar para JSON
         return ret;
     }

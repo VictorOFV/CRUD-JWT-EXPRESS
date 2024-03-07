@@ -6,7 +6,7 @@ const taskSchema = new Schema({
     description: { type: String, required: true },
     done: { type: Boolean, default: false },
     checklist: { type: Schema.Types.ObjectId, ref: "Checklist", required: true },
-    createdAt: { type: Date, default: new Date() }
+    createdAt: { type: Date }
 });
 
 const Task = mongoose.model("Task", taskSchema);

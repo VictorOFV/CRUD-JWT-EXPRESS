@@ -24,20 +24,22 @@ class UserControler {
     }
 
     static async store(request, response, next) {
-        const { name, email, password, username } = userCreateValidation.parse(request.body)
+        const userData = userCreateValidation.parse(request.body)
 
-        const emailExist = await User.exists({ email })
-        const usernameExist = await User.exists({ username })
+        const emailExist = await User.exists({ email: userData.email })
+        const usernameExist = await User.exists({ username: userData.username })
 
         if (emailExist) throw new BadRequestApiError("Por favor utilize um email diferente!")
         if (usernameExist) throw new BadRequestApiError("Por favor utilize um username diferente!")
 
+        userData.createdAt = new Date()
+
         const bcryptSalt = await bcrypt.genSalt(10)
-        const passwordHash = await bcrypt.hash(password, bcryptSalt)
-        const user = new User({ email, name, password: passwordHash, username })
+        const passwordHash = await bcrypt.hash(userData.password, bcryptSalt)
+        const user = new User({ ...userData, password: passwordHash })
 
         await user.save()
-        response.status(201).json(user)
+        response.status(201).json({ user })
     }
 
     static async update(request, response, next) {
@@ -69,7 +71,7 @@ class UserControler {
         const user = await User.findByIdAndUpdate(id, userInfo, { new: true })
 
         if (!user) throw new NotFoundApiError("Usuário não encontrado.")
-        response.status(200).json(user)
+        response.status(200).json({ user })
     }
 
     static async delete(request, response, next) {

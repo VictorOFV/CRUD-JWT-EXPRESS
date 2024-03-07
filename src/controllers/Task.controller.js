@@ -20,12 +20,14 @@ class TaskController {
     }
 
     static async store(request, response) {
-        const { name, description, checklist } = taskValidation.parse(request.body)
-        const checkListExist = await Checklist.findById(checklist)
+        const taskData = taskValidation.parse(request.body)
+        const checkListExist = await Checklist.findById(taskData.checklist)
 
         if (!checkListExist) throw new NotFoundApiError("Checklist não encontrada.")
 
-        const task = await new Task({ name, description, checklist }).save()
+        taskData.createdAt = new Date()
+
+        const task = await new Task(taskData).save()
         checkListExist.tasks.push(task._id)
         await checkListExist.save()
 

@@ -22,8 +22,7 @@ class ChecklistController {
     }
 
     static async store(request, response) {
-        const { name, description, author } = checklistValidation.parse(request.body)
-        const checklistData = { name, description, author }
+        const checklistData = checklistValidation.parse(request.body)
 
         if (request.files) {
             const files = request.files;
@@ -35,6 +34,8 @@ class ChecklistController {
                 })
             }
         }
+
+        checklistData.createdAt = new Date()
 
         const checklist = await new Checklist(checklistData).save()
         response.status(201).json({ checklist })
