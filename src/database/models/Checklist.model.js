@@ -5,6 +5,7 @@ const checklistSchema = new Schema({
     name: { type: String, required: true },
     description: { type: String, required: true },
     tasks: [{ type: Schema.Types.ObjectId, ref: "Task" }],
+    priority: { type: String, required: true },
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     createdAt: { type: Date, default: new Date() },
     icon: { type: String, default: null },

@@ -43,8 +43,8 @@ class ChecklistController {
 
     static async update(request, response) {
         const { id } = idValidation.parse(request.params)
-        const { name, description } = checklistValidation.parse(request.body)
-        const checklistData = { name, description }
+        const { name, description, priority } = checklistValidation.parse(request.body)
+        const checklistData = { name, description, priority }
 
         if (request.files) {
             const files = request.files
