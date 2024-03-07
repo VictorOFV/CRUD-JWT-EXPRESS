@@ -6,6 +6,7 @@ const idValidation = require("../validations/idValidation")
 const { NotFoundApiError, BadRequestApiError } = require("../utils/ApiErrors")
 const imageValidation = require("../validations/imagesValidation")
 const deleteFile = require("../utils/deleteFile")
+const changePasswordValidation = require("../validations/changePasswordValidation")
 
 class UserControler {
 
@@ -80,6 +81,26 @@ class UserControler {
 
         if (!user) throw new NotFoundApiError("Usuário não encontrado.")
         response.status(200).json({ message: "Usuário deletado com sucesso!" })
+    }
+
+    static async changePassword(request, response) {
+        const { id } = idValidation.parse(request.params)
+        const { newPassword, oldPassword } = changePasswordValidation.parse(request.body)
+        const user = await User.findById(id)
+
+        if (!user) throw new NotFoundApiError("Usuário não encontrado.")
+
+        const comparePassword = await bcrypt.compare(oldPassword, user.password)
+
+        if (!comparePassword) throw new BadRequestApiError("Senha incorreta!")
+
+        const bcryptSalt = await bcrypt.genSalt(10)
+        const newHashPassword = await bcrypt.hash(newPassword, bcryptSalt)
+
+        user.password = newHashPassword
+        await user.save()
+
+        response.status(200).json({ message: "A senha foi modificada com sucesso!" })
     }
 }
 

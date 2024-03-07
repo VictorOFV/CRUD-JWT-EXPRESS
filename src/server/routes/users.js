@@ -10,5 +10,6 @@ router.get("/:id", authJwt, UserControler.show)
 router.post("/", UserControler.store)
 router.delete("/:id", authJwt, UserControler.delete)
 router.put("/:id", authJwt, uploadAvatarAndBanner, UserControler.update)
+router.patch("/changePassword/:id", authJwt, UserControler.changePassword)
 
 module.exports = router
