@@ -12,6 +12,13 @@ const checklistSchema = new Schema({
     createdAt: { type: Date }
 });
 
+checklistSchema.set('toJSON', {
+    transform: (doc, ret, options) => {
+        ret.icon = ret.icon ? `${process.env.BACKEND_DOMAIN}/${ret.icon}` : ret.icon
+        return ret;
+    }
+});
+
 const Checklist = mongoose.model("Checklist", checklistSchema);
 
 module.exports = Checklist;

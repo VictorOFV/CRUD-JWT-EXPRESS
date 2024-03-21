@@ -17,6 +17,8 @@ const userSchema = new Schema({
 userSchema.set('toJSON', {
     transform: (doc, ret, options) => {
         delete ret.password; // Remove o campo password ao serializar para JSON
+        ret.avatar = ret.avatar ? `${process.env.BACKEND_DOMAIN}/${ret.avatar}` : ret.avatar;
+        ret.banner = ret.banner ? `${process.env.BACKEND_DOMAIN}/${ret.banner}` : ret.banner;
         return ret;
     }
 });

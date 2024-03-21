@@ -37,7 +37,7 @@ class ChecklistController {
 
         checklistData.createdAt = new Date()
 
-        const checklist = await new Checklist(checklistData).save()
+        const checklist = await (await new Checklist(checklistData).save()).populate("author")
         response.status(201).json({ checklist })
     }
 
@@ -62,7 +62,7 @@ class ChecklistController {
             }
         }
 
-        const checklist = await Checklist.findByIdAndUpdate(id, checklistData, { new: true })
+        const checklist = await Checklist.findByIdAndUpdate(id, checklistData, { new: true }).populate("author")
 
         if (!checklist) throw new NotFoundApiError("Checklist não encontrado.")
         response.status(200).json({ checklist })

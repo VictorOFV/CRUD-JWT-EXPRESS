@@ -16,8 +16,8 @@ class UserControler {
     }
 
     static async show(request, response, next) {
-        const { id } = idValidation.parse(request.params)
-        const user = await User.findById(id)
+        const { username } = request.params
+        const user = await User.findOne({ username })
 
         if (!user) throw new NotFoundApiError("Usuário não encontrado.")
 
