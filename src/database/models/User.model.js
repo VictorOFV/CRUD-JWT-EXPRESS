@@ -6,12 +6,15 @@ const userSchema = new Schema({
     email: { type: String, required: true },
     username: { type: String, required: true },
     password: { type: String, required: true },
+    createdAt: { type: Date, required: true },
     dateOfBirth: { type: Date, default: null },
     gender: { type: String, default: null },
     bio: { type: String, default: null },
+    profession: { type: String, default: null },
+    location: { type: String, default: null },
+    site: { type: String, default: null },
     avatar: { type: String, default: null },
-    banner: { type: String, default: null },
-    createdAt: { type: Date }
+    banner: { type: String, default: null }
 })
 
 userSchema.set('toJSON', {
