@@ -17,6 +17,8 @@ async function authJwt(request, response, next) {
 
         if (!user) return response.status(401).json({ message: "Não autorizado" })
 
+        request.userRequest = user
+
         next()
     } catch (error) {
         if (error.name === "TokenExpiredError" || error.name === "JsonWebTokenError") {

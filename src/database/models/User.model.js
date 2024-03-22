@@ -14,7 +14,9 @@ const userSchema = new Schema({
     location: { type: String, default: null },
     site: { type: String, default: null },
     avatar: { type: String, default: null },
-    banner: { type: String, default: null }
+    banner: { type: String, default: null },
+    following: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    followers: [{ type: Schema.Types.ObjectId, ref: "User" }]
 })
 
 userSchema.set('toJSON', {

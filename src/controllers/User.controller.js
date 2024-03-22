@@ -11,6 +11,7 @@ const changePasswordValidation = require("../validations/changePasswordValidatio
 class UserControler {
 
     static async index(request, response, next) {
+        console.log(request)
         const users = await User.find({})
         response.status(200).json({ users })
     }
@@ -101,6 +102,43 @@ class UserControler {
         await user.save()
 
         response.status(200).json({ message: "A senha foi modificada com sucesso!" })
+    }
+
+    static async followUser(request, response) {
+        const { id } = idValidation.parse(request.params)
+        const user = await User.findById(id)
+
+        if (!user) throw new NotFoundApiError("Usuário não encontrado.")
+        if (user._id.toString() === request.userRequest._id.toString()) throw new BadRequestApiError("Você não pode seguir você mesmo!")
+        if (user.followers.includes(request.userRequest._id) && request.userRequest.following.includes(user._id)) throw new BadRequestApiError("Você já segue esse usuário")
+
+        user.followers.push(request.userRequest._id)
+        request.userRequest.following.push(user._id)
+
+        await user.save()
+        await request.userRequest.save()
+
+        response.status(200).json({ user: request.userRequest })
+    }
+
+    static async unfollowUser(request, response) {
+        const { id } = idValidation.parse(request.params)
+        const user = await User.findById(id)
+
+        if (!user) throw new NotFoundApiError("Usuário não encontrado.")
+        if (user._id.toString() === request.userRequest._id.toString()) throw new BadRequestApiError("Você não desseguir você mesmo!")
+        if (!user.followers.includes(request.userRequest._id) && !request.userRequest.following.includes(user._id)) throw new BadRequestApiError("Você não segue esse usuário")
+
+        const followerIndex = user.followers.indexOf(request.userRequest._id)
+        const followingIndex = request.userRequest.following.indexOf(user._id)
+
+        request.userRequest.following.splice(followingIndex, 1);
+        user.followers.splice(followerIndex, 1) 
+
+        await user.save()
+        await request.userRequest.save()
+
+        response.status(200).json({ user: request.userRequest })
     }
 }
 

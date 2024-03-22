@@ -15,7 +15,7 @@ const userUpdateValidation = z.object({
 .refine(data => jobs.includes(data.profession) || data.profession === null || data.profession === undefined, "String diferente do esperado!")
 .refine(data => {
     try {
-        if(data.site === null || data.site === undefined) return true
+        if(data.site === null || data.site === undefined || data.site === "") return true
         new URL(data.site)
         return true
     } catch {
