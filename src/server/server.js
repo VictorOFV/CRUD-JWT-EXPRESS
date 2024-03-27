@@ -9,6 +9,8 @@ const users = require("./routes/users")
 const login = require("./routes/login")
 const checklist = require("./routes/checklist")
 const task = require("./routes/task")
+const comment = require("./routes/comment")
+
 
 //import middlewares
 const zodValidationErrorHandler = require("./middlewares/zodValidationErrorHandler");
@@ -26,6 +28,7 @@ app.use("/users", users)
 app.use("/login", login)
 app.use("/checklist", checklist)
 app.use("/task", task)
+app.use("/comment", comment)
 
 // error middlewares
 app.use(zodValidationErrorHandler)

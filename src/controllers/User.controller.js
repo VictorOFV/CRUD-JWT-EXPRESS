@@ -7,11 +7,12 @@ const { NotFoundApiError, BadRequestApiError } = require("../utils/ApiErrors")
 const imageValidation = require("../validations/imagesValidation")
 const deleteFile = require("../utils/deleteFile")
 const changePasswordValidation = require("../validations/changePasswordValidation")
+const commentValidation = require("../validations/commentValidation")
+const Comment = require("../database/models/Comment.model")
 
 class UserControler {
 
     static async index(request, response, next) {
-        console.log(request)
         const users = await User.find({})
         response.status(200).json({ users })
     }
@@ -133,12 +134,32 @@ class UserControler {
         const followingIndex = request.userRequest.following.indexOf(user._id)
 
         request.userRequest.following.splice(followingIndex, 1);
-        user.followers.splice(followerIndex, 1) 
+        user.followers.splice(followerIndex, 1)
 
         await user.save()
         await request.userRequest.save()
 
         response.status(200).json({ user: request.userRequest })
+    }
+
+    static async createComment(request, response) {
+        const { id } = idValidation.parse(request.params)
+        const { content } = commentValidation.parse(request.body)
+        const user = await User.findById(id)
+
+        if (!user) throw new NotFoundApiError("Usuário não encontrado.")
+
+        const userComment = { content }
+        userComment.author = request.userRequest._id
+        userComment.createdAt = new Date()
+
+        const comment = new Comment(userComment)
+        user.comments.push(comment._id)
+
+        await comment.save()
+        await user.save()
+
+        response.status(201).json({ user })
     }
 }
 

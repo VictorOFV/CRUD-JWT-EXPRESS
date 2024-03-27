@@ -9,7 +9,7 @@ const checklistSchema = new Schema({
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     createdAt: { type: Date, default: new Date() },
     icon: { type: String, default: null },
-    createdAt: { type: Date }
+    createdAt: { type: Date, required: true }
 });
 
 checklistSchema.set('toJSON', {

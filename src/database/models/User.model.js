@@ -16,14 +16,15 @@ const userSchema = new Schema({
     avatar: { type: String, default: null },
     banner: { type: String, default: null },
     following: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    followers: [{ type: Schema.Types.ObjectId, ref: "User" }]
+    followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }]
 })
 
 userSchema.set('toJSON', {
     transform: (doc, ret, options) => {
         delete ret.password; // Remove o campo password ao serializar para JSON
-        ret.avatar = ret.avatar ? `${process.env.BACKEND_DOMAIN}/${ret.avatar}` : ret.avatar;
-        ret.banner = ret.banner ? `${process.env.BACKEND_DOMAIN}/${ret.banner}` : ret.banner;
+        ret.avatar = ret.avatar ? `${process.env.BACKEND_DOMAIN}/${ret.avatar}` : ret.avatar; // adiciona o dominio do backend para facilitar
+        ret.banner = ret.banner ? `${process.env.BACKEND_DOMAIN}/${ret.banner}` : ret.banner; // adiciona o dominio do backend para facilitar
         return ret;
     }
 });
