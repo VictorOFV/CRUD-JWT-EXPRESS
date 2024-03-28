@@ -149,17 +149,17 @@ class UserControler {
 
         if (!user) throw new NotFoundApiError("Usuário não encontrado.")
 
-        const userComment = { content }
-        userComment.author = request.userRequest._id
-        userComment.createdAt = new Date()
+        const commentUser = { content }
+        commentUser.author = request.userRequest._id
+        commentUser.createdAt = new Date()
 
-        const comment = new Comment(userComment)
+        const comment = new Comment(commentUser)
         user.comments.push(comment._id)
 
         await comment.save()
         await user.save()
 
-        response.status(201).json({ user })
+        response.status(201).json({ comment })
     }
 }
 

@@ -5,6 +5,7 @@ const commentSchema = new Schema({
     content: { type: String, required: true },
     createdAt: { type: Date, required: true },
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    parent: { type: Schema.Types.ObjectId, ref: "Comment", default: null },
     likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
     dislikes: [{ type: Schema.Types.ObjectId, ref: "User" }],
     comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }]
