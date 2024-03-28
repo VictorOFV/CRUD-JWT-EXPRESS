@@ -7,6 +7,7 @@ const taskSchema = new Schema({
     createdAt: { type: Date, required: true },
     done: { type: Boolean, default: false },
     checklist: { type: Schema.Types.ObjectId, ref: "Checklist", required: true },
+    author: { type: Schema.Types.ObjectId, ref: "User", required: true }
 });
 
 const Task = mongoose.model("Task", taskSchema);

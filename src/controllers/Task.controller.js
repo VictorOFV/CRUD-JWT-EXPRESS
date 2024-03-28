@@ -26,6 +26,7 @@ class TaskController {
         if (!checkListExist) throw new NotFoundApiError("Checklist não encontrada.")
 
         taskData.createdAt = new Date()
+        taskData.author = request.requestUser._id
 
         const task = await new Task(taskData).save()
         checkListExist.tasks.push(task._id)

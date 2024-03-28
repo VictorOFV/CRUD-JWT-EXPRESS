@@ -151,6 +151,7 @@ class UserControler {
 
         const commentUser = { content }
         commentUser.author = request.userRequest._id
+        commentUser.post = user._id
         commentUser.createdAt = new Date()
 
         const comment = new Comment(commentUser)
